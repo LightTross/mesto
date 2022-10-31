@@ -1,6 +1,7 @@
 .elements__title {
-  font-family: 'Inter', Arial, sans-serif;
+  max-width: calc(100% - 22px - 25px);
   margin: 0;
+  font-family: 'Inter', Arial, sans-serif;
   font-size: 24px;
   font-weight: 900;
   line-height: 1.2;
