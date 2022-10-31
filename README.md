@@ -17,7 +17,7 @@
 -----------------------------------------------------------------
 ### Несколько картинок из проекта:
 
-<img src="./images/Switzerland-Obersee.jpg" width="260" height="260" alt="Озеро в Швейцарии"> <img src="./images/Iceland.jpg" width="260" height="260" alt="Пещера в Исландии"> <img src="./images/Italy-Capri.jpg" width="260" height="260" alt="Капри">
+<img src="./images/Switzerland-Obersee.jpg" width="270" height="270" alt="Озеро в Швейцарии"> <img src="./images/Iceland.jpg" width="270" height="270" alt="Пещера в Исландии"> <img src="./images/Italy-Capri.jpg" width="270" height="270" alt="Капри">
 
 ### Ссылка на сайт:
 [https://lighttross.github.io/mesto/index.html]
