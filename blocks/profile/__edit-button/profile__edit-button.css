@@ -1,10 +1,9 @@
 .profile__edit-button {
-  all: unset;
   background: transparent url(../../../images/edit-button.svg) center no-repeat;
   width: 24px;
   height: 24px;
   align-self: center;
-  border: 1px solid #fff;
+  border: 1px solid #fff;image.png
   cursor: pointer;
   transition: opacity .3s linear;
 }
