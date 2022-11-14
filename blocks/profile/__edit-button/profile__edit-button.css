@@ -1,5 +1,4 @@
 .profile__edit-button {
-  all: unset;
   background: transparent url(../../../images/edit-button.svg) center no-repeat;
   width: 24px;
   height: 24px;
