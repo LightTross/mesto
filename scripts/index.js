@@ -1,5 +1,6 @@
 const elementsList = document.querySelector('.elements__list');
 const popupButtonClose = document.querySelector('.popup__button-close');
+
 const profileEditButton = document.querySelector('.profile__edit-button');
 const popupProfile = document.querySelector('.popup_profile');
 const profileForm = document.querySelector('[name="profile"]');
@@ -8,14 +9,18 @@ const inputName = document.querySelector('.form__input_info_name');
 const profileAbout = document.querySelector('.profile__about');
 const inputAbout = document.querySelector('.form__input_info_about');
 const itemAddButton = document.querySelector('.profile__add-button');
+
 const popupItem = document.querySelector('.popup_item');
 const itemForm = document.querySelector('[name="item"]');
 const inputTitle = document.querySelector('.form__input_title');
 const inputLink = document.querySelector('.form__input_link');
 const itemLikeButton = document.querySelectorAll('.elements__like');
+
 const popupImage = document.querySelector('.popup_image');
 const figureImage = document.querySelector('.figure__image');
 const figureTitle = document.querySelector('.figure__title');
+
+const itemTemplate = document.querySelector('#item').content;
 
 const initialItems = [
   {
@@ -49,22 +54,20 @@ const initialItems = [
 //открываем форму
 function openPopup(popup) {
   popup.classList.add('popup_opened');
-  document.addEventListener('click', closePopupHandle);
+  popup.addEventListener('click', closePopupHandle);
 }
 
 //закрываем форму
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
-  document.removeEventListener('click', closePopupHandle);
+  popup.removeEventListener('click', closePopupHandle);
 }
 
 //поиск открытой формы и её закрытие
 function closePopupHandle(event) {
-  const popupOpened = event.target.closest('.popup');
-  const containPopupOpened = event.target.classList.contains('popup_opened');
-  const containCloseButton = event.target.classList.contains('popup__button-close');
-
-  if (containPopupOpened || containCloseButton) closePopup(popupOpened);
+  if (event.target === event.currentTarget || event.target.classList.contains('popup__button-close')) {
+    closePopup(event.currentTarget);
+  };
 }
 
 
@@ -96,21 +99,14 @@ profileForm.addEventListener('submit', editProfileText);
 
 
 //ЭЛЕМЕНТЫ --------------------------------------------------------
-//обнуление значений в форме добавления элементов
-function itemDefaultValue() {
-  inputTitle.value = ''; //название
-  inputLink.value = ''; //ссылка
-}
-
 //открываем форму добавления элементов
 itemAddButton.addEventListener('click', () => {
   openPopup(popupItem);
-  itemDefaultValue();
+  itemForm.reset();
 })
 
 //добавление нового элемента
 function createItem(name, link) {
-  const itemTemplate = document.querySelector('#item').content;
   const itemElement = itemTemplate.querySelector('.elements__item').cloneNode(true);
   const itemImage = itemElement.querySelector('.elements__image');
   const itemTitle = itemElement.querySelector('.elements__title');
@@ -125,9 +121,9 @@ function createItem(name, link) {
   //открываем картинку на весь экран
   itemImage.addEventListener('click', (event) => {
     openPopup(popupImage);
-    figureImage.src = itemImage.src;
-    figureImage.alt = itemImage.alt;
-    figureTitle.textContent = itemTitle.textContent;
+    figureImage.src = link;
+    figureImage.alt = name;
+    figureTitle.textContent = name;
   });
 
   //проставляем или убираем лайк
