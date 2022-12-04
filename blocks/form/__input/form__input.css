@@ -1,7 +1,7 @@
 .form__input {
   display: block;
   width: 100%;
-  padding: 13px 0;
+  padding: 0 0 9px 0;
   outline: none;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, .2);
@@ -12,6 +12,3 @@
   line-height: 1.2;
   color: #000;
 }
-.form__input:not(:first-child) {
-    margin-top: 17px;
- }

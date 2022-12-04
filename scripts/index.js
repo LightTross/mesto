@@ -1,3 +1,4 @@
+//ПЕРЕМЕННЫЕ ----------------------------------------------------------
 const elementsList = document.querySelector('.elements__list');
 const popupButtonClose = document.querySelector('.popup__button-close');
 
@@ -9,12 +10,14 @@ const inputName = document.querySelector('.form__input_info_name');
 const profileAbout = document.querySelector('.profile__about');
 const inputAbout = document.querySelector('.form__input_info_about');
 const itemAddButton = document.querySelector('.profile__add-button');
+const profileSubmitButton = profileForm.querySelector('.form__button-submit');
 
 const popupItem = document.querySelector('.popup_item');
 const itemForm = document.querySelector('[name="item"]');
 const inputTitle = document.querySelector('.form__input_title');
 const inputLink = document.querySelector('.form__input_link');
 const itemLikeButton = document.querySelectorAll('.elements__like');
+const itemSubmitButton = itemForm.querySelector('.form__button-submit');
 
 const popupImage = document.querySelector('.popup_image');
 const figureImage = document.querySelector('.figure__image');
@@ -55,12 +58,14 @@ const initialItems = [
 function openPopup(popup) {
   popup.classList.add('popup_opened');
   popup.addEventListener('click', closePopupHandle);
+  document.addEventListener('keydown', closePopupEsc);
 }
 
 //закрываем форму
 function closePopup(popup) {
   popup.classList.remove('popup_opened');
   popup.removeEventListener('click', closePopupHandle);
+  document.removeEventListener('keydown', closePopupEsc);
 }
 
 //поиск открытой формы и её закрытие
@@ -68,6 +73,14 @@ function closePopupHandle(event) {
   if (event.target === event.currentTarget || event.target.classList.contains('popup__button-close')) {
     closePopup(event.currentTarget);
   };
+}
+
+//закрываем форму по esc
+function closePopupEsc(event) {
+  if (event.key === 'Escape') {
+    const openedPopup = document.querySelector('.popup_opened');
+    closePopup(openedPopup);
+  }
 }
 
 
@@ -80,8 +93,10 @@ function profileAddValue() {
 
 //по клику открываем форму профиля и заполняем ее
 profileEditButton.addEventListener('click', () => {
+  profileSubmitButton.disabled = false;
   openPopup(popupProfile);
   profileAddValue();
+  resetErrors(profileForm);
 })
 
 //заполняем страницу значениями из формы профиля
@@ -101,8 +116,10 @@ profileForm.addEventListener('submit', editProfileText);
 //ЭЛЕМЕНТЫ --------------------------------------------------------
 //открываем форму добавления элементов
 itemAddButton.addEventListener('click', () => {
+  itemSubmitButton.disabled = true;
   openPopup(popupItem);
   itemForm.reset();
+  resetErrors(itemForm);
 })
 
 //добавление нового элемента
