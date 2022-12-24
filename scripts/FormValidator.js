@@ -67,11 +67,12 @@ export default class FormValidator {
     });
   };
 
-  //сброс ошибок при открытии формы
-  resetErrors() {
-    this._inputs = this._formElement.querySelectorAll(this._params.inputSelector);
-    this._inputs.forEach((input) => {
-      this._hideInputError(input);
+  //сброс валидации
+  resetValidation() {
+    this._toggleButtonState();
+
+    this._inputList.forEach((inputElement) => {
+      this._hideInputError(inputElement);
     });
   }
 

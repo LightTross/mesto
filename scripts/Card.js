@@ -1,10 +1,9 @@
-import { openImage } from './index.js';
-
 export default class Card {
-  constructor(itemData, templateSelector) {
+  constructor(itemData, templateSelector, openImage) {
     this._name = itemData.name;
     this._link = itemData.link;
     this._templateSelector = templateSelector;
+    this._openImage = openImage;
   }
 
   //получаем шаблон элемента
@@ -17,8 +16,8 @@ export default class Card {
   }
 
   //проставляем или убираем лайк
-  _toggleItemLike() {
-    this.classList.toggle('elements__like_active');
+  _toggleItemLike(event) {
+    event.target.classList.toggle('elements__like_active');
   }
 
   //удаляем карточку
@@ -30,7 +29,7 @@ export default class Card {
   _setEventListeners() {
     this._itemElement.querySelector('.elements__like').addEventListener('click', this._toggleItemLike);
     this._itemElement.querySelector('.elements__button-remove').addEventListener('click', () => this._deleteItem());
-    this._itemImage.addEventListener('click', () => openImage(this._name, this._link));
+    this._itemImage.addEventListener('click', () => this._openImage(this._name, this._link));
   }
 
   //добавление нового элемента
