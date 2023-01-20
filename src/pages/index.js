@@ -1,6 +1,13 @@
-import { validateParams } from './FormValidator.js';
-import FormValidator from './FormValidator.js';
-import Card from './Card.js';
+//ИМПОРТ ----------------------------------------------------------
+import './index.css';
+import { validateParams } from '../components/FormValidator.js';
+import FormValidator from '../components/FormValidator.js';
+import Card from '../components/Card.js';
+import Section from '../components/Section.js';
+import Popup from '../components/Popup.js';
+import PopupWithImage from '../components/PopupWithImage.js';
+import PopupWithForm from '../components/PopupWithForm.js';
+import UserInfo from '../components/UserInfo.js';
 
 
 //ПЕРЕМЕННЫЕ ----------------------------------------------------------
@@ -8,7 +15,6 @@ const elementsList = document.querySelector('.elements__list');
 
 const profileEditButton = document.querySelector('.profile__edit-button');
 const popupProfile = document.querySelector('.popup_profile');
-const profileForm = document.querySelector('[name="profile"]');
 const profileName = document.querySelector('.profile__name');
 const inputName = document.querySelector('.form__input_info_name');
 const profileAbout = document.querySelector('.profile__about');
@@ -16,13 +22,8 @@ const inputAbout = document.querySelector('.form__input_info_about');
 const itemAddButton = document.querySelector('.profile__add-button');
 
 const popupItem = document.querySelector('.popup_item');
-const itemForm = document.querySelector('[name="item"]');
-const inputTitle = document.querySelector('.form__input_title');
-const inputLink = document.querySelector('.form__input_link');
 
 const popupImage = document.querySelector('.popup_image');
-const figureImage = document.querySelector('.figure__image');
-const figureTitle = document.querySelector('.figure__title');
 
 const initialItems = [
   {
@@ -55,35 +56,6 @@ const formValidators = {};
 
 
 //ФОРМА ----------------------------------------------------------
-//открываем форму
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-  popup.addEventListener('mousedown', handlePopupClose);
-  document.addEventListener('keydown', handlePopupCloseEsc);
-}
-
-//закрываем форму
-function closePopup(popup) {
-  popup.classList.remove('popup_opened');
-  popup.removeEventListener('mousedown', handlePopupClose);
-  document.removeEventListener('keydown', handlePopupCloseEsc);
-}
-
-//поиск открытой формы и её закрытие
-function handlePopupClose(event) {
-  if (event.target === event.currentTarget || event.target.classList.contains('popup__button-close')) {
-    closePopup(event.currentTarget);
-  };
-}
-
-//закрываем форму по esc
-function handlePopupCloseEsc(event) {
-  if (event.key === 'Escape') {
-    const openedPopup = document.querySelector('.popup_opened');
-    closePopup(openedPopup);
-  }
-}
-
 //включение валидации на всех формах
 const enableValidation = (params) => {
   const formList = Array.from(document.querySelectorAll(params.formSelector));
@@ -101,67 +73,68 @@ enableValidation(validateParams);
 
 
 //ПРОФИЛЬ --------------------------------------------------------
+const userInfo = new UserInfo({name: profileName, about: profileAbout});
+
+//по клику передаем значения из формы на страницу
+const profilePopup = new PopupWithForm({
+  popupSelector: popupProfile,
+  handleFormSubmit: (formData) => {
+    userInfo.setUserInfo(formData);
+    profilePopup.close();
+  }
+})
+
+//по клику открываем форму профиля и заполняем ее
+profileEditButton.addEventListener('click', () => {
+  fillProfileInputs();
+  formValidators['profile'].resetValidation();
+  profilePopup.open();
+})
+
+
 //заполняем форму профиля значениями со страницы
 function fillProfileInputs() {
   inputName.value = profileName.textContent; //имя
   inputAbout.value = profileAbout.textContent; //о себе
 }
 
-//по клику открываем форму профиля и заполняем ее
-profileEditButton.addEventListener('click', () => {
-  openPopup(popupProfile);
-  fillProfileInputs();
-  formValidators['profile'].resetValidation();
-})
-
-//заполняем страницу значениями из формы профиля
-function editProfileText(event) {
-  event.preventDefault();
-
-  profileName.textContent = inputName.value; //имя
-  profileAbout.textContent = inputAbout.value; //о себе
-
-  closePopup(popupProfile); //закрываем форму
-}
-
-//по клику передаем значения из формы на страницу
-profileForm.addEventListener('submit', editProfileText);
-
 
 //ЭЛЕМЕНТЫ --------------------------------------------------------
-//открываем форму добавления элементов
-itemAddButton.addEventListener('click', () => {
-  openPopup(popupItem);
-  itemForm.reset();
-  formValidators['item'].resetValidation();
-})
+const popupWithImage = new PopupWithImage({popupSelector: popupImage});
 
 //открываем картинку
-function openImage(name, link) {
-  openPopup(popupImage);
-
-  figureImage.src = link;
-  figureImage.alt = name;
-  figureTitle.textContent = name;
+function handleCardClick(name, link) {
+  popupWithImage.open(name, link);
 }
 
 //создаем элемент
 function createItem(itemData) {
-  return new Card(itemData, '#item', openImage).createItem();
+  return new Card(itemData, '#item', handleCardClick).createItem();
 }
 
 //добавляем новый элемент
-function renderItem(itemData) {
-  const newItem = createItem(itemData);
-  elementsList.prepend(newItem);
-}
-
-//заполнение стандартных элементов
-initialItems.forEach(renderItem);
+const renderItem = new Section({items: initialItems, renderer: item => renderItem.addItem(createItem(item))}, elementsList);
 
 //добавление элемента пользователем
-itemForm.addEventListener('submit', (event) => {
-  renderItem({name: inputTitle.value, link: inputLink.value});
-  event.preventDefault();
-  closePopup(popupItem);
+const addItemPopup = new PopupWithForm({
+  popupSelector: popupItem,
+  handleFormSubmit: (formData) => {
+    renderItem.addItem(createItem({name: formData.title, link: formData.link}));
+    addItemPopup.close();
+  },
 });
+
+//открываем форму добавления элементов
+itemAddButton.addEventListener('click', () => {
+  addItemPopup.open();
+  formValidators['item'].resetValidation();
+})
+
+//отрисовка элементов
+renderItem.renderItems()
+
+
+//ОБРАБОТЧИКИ --------------------------------------------------------
+profilePopup.setEventListeners();
+addItemPopup.setEventListeners();
+popupWithImage.setEventListeners();

@@ -1,9 +1,9 @@
 export default class Card {
-  constructor(itemData, templateSelector, openImage) {
+  constructor(itemData, templateSelector, handleCardClick) {
     this._name = itemData.name;
     this._link = itemData.link;
     this._templateSelector = templateSelector;
-    this._openImage = openImage;
+    this._handleCardClick = handleCardClick;
   }
 
   //получаем шаблон элемента
@@ -29,7 +29,7 @@ export default class Card {
   _setEventListeners() {
     this._itemElement.querySelector('.elements__like').addEventListener('click', this._toggleItemLike);
     this._itemElement.querySelector('.elements__button-remove').addEventListener('click', () => this._deleteItem());
-    this._itemImage.addEventListener('click', () => this._openImage(this._name, this._link));
+    this._itemImage.addEventListener('click', () => this._handleCardClick(this._name, this._link));
   }
 
   //добавление нового элемента
