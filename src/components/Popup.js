@@ -1,18 +1,18 @@
 export default class Popup {
-  constructor({popupSelector}) {
-    this._popupSelector = popupSelector;
+  constructor(popupSelector) {
+    this._popup = document.querySelector(popupSelector);
     this._closeEsc = this._handleEscClose.bind(this);
   }
 
   //открываем форму
   open() {
-    this._popupSelector.classList.add('popup_opened');
+    this._popup.classList.add('popup_opened');
     document.addEventListener("keydown", this._closeEsc);
   }
 
   //закрываем форму
   close() {
-    this._popupSelector.classList.remove('popup_opened');
+    this._popup.classList.remove('popup_opened');
     document.removeEventListener("keydown", this._closeEsc);
   }
 
@@ -25,7 +25,7 @@ export default class Popup {
 
   //закрываем форму по нажатию клавиши мыши
   setEventListeners() {
-    this._popupSelector.addEventListener("mousedown", event => {
+    this._popup.addEventListener("mousedown", event => {
       if (event.target === event.currentTarget || event.target.classList.contains('popup__button-close')) {
         this.close();
       };

@@ -23,6 +23,7 @@ export default class Card {
   //удаляем карточку
   _deleteItem() {
     this._itemElement.remove();
+    this._itemElement = null;
   }
 
   //навешиваем события
