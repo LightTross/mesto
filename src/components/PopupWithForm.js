@@ -14,28 +14,26 @@ export default class PopupWithForm extends Popup {
   _getInputValues() {
     this._formInputData = {};
     this._inputList.forEach(input => this._formInputData[input.name] = input.value);
-    
+
     return this._formInputData;
   }
 
-  //изменяем название кнопки при сохранении
-  loadingState(loading) {
-    if (loading) {
-      this._submitButton.textContent = 'Сохранение...';
-    }
-    else {
-      this._submitButton.textContent = this._submitButtonText;
-    }
+  //заполняем форму профиля
+  setInputValues(data) {
+    this._inputList.forEach(input => input.value = data[input.name]);
   }
 
-  //навешиваем обработчик и устанавливаем значения из формы
+  //навешиваем обработчик, устанавливаем значения из формы, изменяем название кнопки при сохранении
   setEventListeners() {
-    this._form.addEventListener('submit', event => {
-      event.preventDefault();
-      this._handleFormSubmit(this._getInputValues());
-    });
-
     super.setEventListeners();
+
+    this._form.addEventListener('submit', () => {
+      const initialText = this._submitButton.textContent;
+      this._submitButton.textContent = 'Сохранение...';
+      this._handleFormSubmit(this._getInputValues())
+        .then(() => this.close())
+        .finally(() => this._submitButton.textContent = initialText)
+    });
   }
 
   //закрываем форму и сбрасываем её

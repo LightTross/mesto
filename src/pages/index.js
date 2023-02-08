@@ -58,14 +58,12 @@ const userInfo = new UserInfo({name: profileName, about: profileAbout, avatar: p
 const profilePopup = new PopupWithForm({
   popupSelector: '.popup_profile',
   handleFormSubmit: formData => {
-    profilePopup.loadingState(true);
     api.editProfile(formData)
       .then(formData => {
         userInfo.setUserInfo(formData);
         profilePopup.close();
       })
       .catch(error => console.log(`Ошибка: ${error}`))
-      .finally(() => {profilePopup.loadingState(false)});
   }
 })
 
@@ -73,38 +71,28 @@ const profilePopup = new PopupWithForm({
 const profileAvatarPopup = new PopupWithForm({
   popupSelector: '.popup_update-avatar',
   handleFormSubmit: avatarData => {
-    profileAvatarPopup.loadingState(true);
     api.updateAvatar(avatarData)
       .then(avatarData => {
-        profileAvatar.src = avatarData.avatar;
+        userInfo.setUserInfo(avatarData);
         profileAvatarPopup.close();
       })
       .catch(error => console.log(`Ошибка: ${error}`))
-      .finally(() => profileAvatarPopup.loadingState(false));
   }
 })
 
 //по клику открываем форму профиля и заполняем ее с сервера
 profileEditButton.addEventListener('click', () => {
-  fillProfileInputs(userInfo.getUserInfo());
+  profilePopup.setInputValues(userInfo.getUserInfo());
   formValidators['profile'].resetValidation();
   profilePopup.open();
 })
 
 //по клику открываем форму аватара и заполняем ее с сервера
 profileAvatarEditButton.addEventListener('click', () => {
-  fillProfileInputs(userInfo.getUserInfo());
+  profileAvatarPopup.setInputValues(userInfo.getUserInfo());
   formValidators['avatar'].resetValidation();
   profileAvatarPopup.open();
 })
-
-//заполняем форму профиля
-function fillProfileInputs(infoData) {
-  inputName.value = infoData.name //имя
-  inputAbout.value = infoData.about //о себе
-  inputAvatar.value = infoData.avatar //аватар
-}
-
 
 //ЭЛЕМЕНТЫ --------------------------------------------------------
 const popupWithImage = new PopupWithImage('.popup_image');
@@ -113,15 +101,15 @@ const popupItemDelete = new PopupWithConfirmation('.popup_delete-item');
 //создаем элемент
 const createItem = itemData => {
   const item = new Card({
-    itemData: itemData, 
-    userId: userId, 
-    templateSelector: '#item', 
-    handleCardClick: (name, link) => popupWithImage.open(name, link), 
+    itemData: itemData,
+    userId: userId,
+    templateSelector: '#item',
+    handleCardClick: (name, link) => popupWithImage.open(name, link),
     handleAddLikeClick: itemId => {
       api.setLike(itemId)
         .then(itemData => item.toggleItemLike(itemData))
         .catch(error => console.log(`Ошибка: ${error}`));
-    }, 
+    },
     handleDeleteLikeClick: itemId => {
       api.deleteLike(itemId)
         .then(itemData => item.toggleItemLike(itemData))
@@ -139,7 +127,7 @@ const createItem = itemData => {
       })
     }
   })
-  
+
   return item.createItem();
 }
 
@@ -150,14 +138,12 @@ const renderItem = new Section({renderer: item => renderItem.addItem(createItem(
 const addItemPopup = new PopupWithForm({
   popupSelector: '.popup_item',
   handleFormSubmit: formData => {
-    addItemPopup.loadingState(true);
     api.addNewItem(formData)
       .then(formData => {
-        renderItem.addItem(createItem(formData));
+        renderItem.prependItem(createItem(formData));
         addItemPopup.close();
       })
-      .catch(error => console.log(`Ошибка: ${error}`))
-      .finally(() => addItemPopup.loadingState(false));
+      .catch(error => console.log(`Ошибка: ${error}`));
   }
 });
 

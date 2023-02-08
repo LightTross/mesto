@@ -9,8 +9,13 @@ export default class Section {
     renderedItems.forEach(item => this._renderer(item));
   }
 
-  //добавление элемента
+  //добавление элемента в конец списка
   addItem(element) {
     this._container.append(element);
+  }
+
+  //добавление элемента в начало списка
+  prependItem(element) {
+    this._container.prepend(element);
   }
 }

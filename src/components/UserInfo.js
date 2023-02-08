@@ -7,7 +7,7 @@ export default class UserInfo {
 
   //получаем данные о пользователе
   getUserInfo() {
-    return {name: this._name.textContent, about: this._about.textContent, avatar: this._avatar.src};
+    return {username: this._name.textContent, about: this._about.textContent, avatarLink: this._avatar.src};
   }
 
   //задаем данные пользователя
