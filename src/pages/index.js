@@ -58,7 +58,7 @@ const userInfo = new UserInfo({name: profileName, about: profileAbout, avatar: p
 const profilePopup = new PopupWithForm({
   popupSelector: '.popup_profile',
   handleFormSubmit: formData => {
-    api.editProfile(formData)
+    return api.editProfile(formData)
       .then(formData => {
         userInfo.setUserInfo(formData);
         profilePopup.close();
@@ -71,7 +71,7 @@ const profilePopup = new PopupWithForm({
 const profileAvatarPopup = new PopupWithForm({
   popupSelector: '.popup_update-avatar',
   handleFormSubmit: avatarData => {
-    api.updateAvatar(avatarData)
+    return api.updateAvatar(avatarData)
       .then(avatarData => {
         userInfo.setUserInfo(avatarData);
         profileAvatarPopup.close();
@@ -138,7 +138,7 @@ const renderItem = new Section({renderer: item => renderItem.addItem(createItem(
 const addItemPopup = new PopupWithForm({
   popupSelector: '.popup_item',
   handleFormSubmit: formData => {
-    api.addNewItem(formData)
+    return api.addNewItem(formData)
       .then(formData => {
         renderItem.prependItem(createItem(formData));
         addItemPopup.close();
